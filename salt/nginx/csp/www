@@ -1,0 +1,1 @@
+add_header Content-Security-Policy "default-src 'none'; script-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'none'; child-src 'none'; object-src 'none'; form-action 'none'; manifest-src 'self'" always;

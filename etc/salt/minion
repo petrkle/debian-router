@@ -1,0 +1,11 @@
+file_client: local
+log_level_logfile: info
+state_verbose: False
+mysql.default_file: '/etc/mysql/debian.cnf'
+file_roots:
+  base:
+    - /home/petr/debian-router/salt
+
+pillar_roots:
+  base:
+    - /home/petr/debian-router/pillar

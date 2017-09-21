@@ -1,0 +1,12 @@
+Host {{ pillar.hostname }}
+	ForwardX11 no
+	Hostname={{ pillar.hostname }}.example.cz
+	Port=2234
+	IdentityFile=~/crypto/pekkey_id_rsa
+	User=root
+Host vps.example.cz
+	ForwardX11 no
+	Hostname=vps.example.cz
+	Port=2234
+	IdentityFile=~/crypto/pekkey_id_rsa
+	User=petr

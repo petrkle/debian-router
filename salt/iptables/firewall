@@ -1,0 +1,110 @@
+#!/bin/bash
+# Start/stop/restart firewall
+### BEGIN INIT INFO
+# Provides: firewall
+# Required-Start: $network
+# Required-Stop: $network
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: iptables
+# Description: iptables
+### END INIT INFO
+
+IPT=/sbin/iptables
+IPT6=/sbin/ip6tables
+PUBLIC=eth0
+INTERNAL1=eth1
+INTERNAL2=eth2
+
+firewall_start() {
+
+	echo 1 > /proc/sys/net/ipv4/tcp_syncookies
+	echo 0 > /proc/sys/net/ipv4/conf/all/accept_redirects
+	echo 0 > /proc/sys/net/ipv4/conf/all/send_redirects
+	echo 1 > /proc/sys/net/ipv4/icmp_ignore_bogus_error_responses
+	echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+	echo 0 > /proc/sys/net/ipv4/conf/all/accept_source_route
+	echo 1 > /proc/sys/net/ipv4/conf/all/log_martians
+
+	# Set default policy to DROP
+	$IPT -P INPUT DROP
+	$IPT -P OUTPUT ACCEPT
+	$IPT -P FORWARD ACCEPT
+
+	$IPT6 -P INPUT DROP
+	$IPT6 -P OUTPUT ACCEPT
+	$IPT6 -P FORWARD DROP
+
+	# Flush old rules
+	$IPT -F
+	$IPT6 -F
+
+	# Allow loopback traffic
+	$IPT -A INPUT -i lo -j ACCEPT
+	$IPT -A OUTPUT -o lo -j ACCEPT
+	$IPT6 -A INPUT -i lo -j ACCEPT
+	$IPT6 -A OUTPUT -o lo -j ACCEPT
+
+	# nat
+
+	$IPT -t nat -A POSTROUTING -o $PUBLIC -j MASQUERADE
+
+	$IPT -A FORWARD -i $INTERNAL1 -o $PUBLIC -j ACCEPT
+	$IPT -A FORWARD -i $INTERNAL2 -o $PUBLIC -j ACCEPT
+
+	# Allow packets of established connections and those 
+	#   which are related to established connections
+	$IPT -A INPUT -i $PUBLIC -p all -m state --state ESTABLISHED,RELATED -j ACCEPT
+	$IPT6 -A INPUT -i $PUBLIC -p all -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+	# Allow services
+	$IPT -A INPUT -p tcp --dport 4321 -j ACCEPT
+	$IPT -A INPUT -p tcp --dport 80 -j ACCEPT
+	$IPT -A INPUT -p tcp --dport 443 -j ACCEPT
+
+	# internal
+	$IPT -A INPUT -i $INTERNAL1 -p udp -j ACCEPT
+	$IPT -A INPUT -i $INTERNAL1 -p tcp -j ACCEPT
+
+	$IPT -A INPUT -i $INTERNAL2 -p udp -j ACCEPT
+	$IPT -A INPUT -i $INTERNAL2 -p tcp -j ACCEPT
+
+	# icmp
+	$IPT -I INPUT -p icmp --icmp-type 8 -s 0/0 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+	$IPT -I OUTPUT -p icmp --icmp-type 0 -d 0/0 -m state --state ESTABLISHED,RELATED -j ACCEPT
+	$IPT6 -I INPUT -p ipv6-icmp -j ACCEPT
+
+}
+
+firewall_stop() {
+	$IPT -F
+	$IPT -X
+	$IPT -P INPUT ACCEPT
+	$IPT -P OUTPUT ACCEPT
+	$IPT -P FORWARD ACCEPT
+
+	$IPT6 -F
+	$IPT6 -X
+	$IPT6 -P INPUT ACCEPT
+	$IPT6 -P OUTPUT ACCEPT
+	$IPT6 -P FORWARD ACCEPT
+}
+
+firewall_restart() {
+  firewall_stop
+  firewall_start
+}
+
+case "$1" in
+'start')
+  firewall_start
+  ;;
+'stop')
+  firewall_stop
+  ;;
+'restart')
+  firewall_restart
+  ;;
+*)
+  firewall_start
+esac

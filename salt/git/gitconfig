@@ -1,0 +1,16 @@
+[user]
+        name = Petr
+        email = petr@example.cz
+
+[core]
+        editor = vim
+
+[color]
+        ui = true
+
+[push]
+				default = simple
+[pager]
+        log = diff-highlight | less
+        show = diff-highlight | less
+        diff = diff-highlight | less

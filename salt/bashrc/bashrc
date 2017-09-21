@@ -1,0 +1,49 @@
+alias cls='clear'
+alias date='date "+%-d. %-m. %Y %k:%M:%S"'
+alias df='df -Th' 
+alias bc='bc -lq' 
+alias ls='ls --color=auto'
+alias ll='ls -lp'
+export PROMPT_COMMAND="history -a; history -n"
+shopt -s histappend
+export HISTSIZE=10000
+export HISTFILESIZE=$HISTSIZE
+export HISTCONTROL=ignoreboth
+export HISTTIMEFORMAT='%F %T '
+export EDITOR=vim
+export VISUAL=$EDITOR
+export SVN_EDITOR=$EDITOR
+export LC_CTYPE=cs_CZ.UTF-8
+export LC_ALL=cs_CZ.UTF-8
+export LANG=cs_CZ.UTF-8
+export PERL_LWP_SSL_CA_PATH=/etc/ssl/certs
+export PATH=$PATH:~/bin
+
+res() {
+
+  old=$(stty -g)
+  stty raw -echo min 0 time 5
+
+  printf '\0337\033[r\033[999;999H\033[6n\0338' > /dev/tty
+  IFS='[;R' read -r _ rows cols _ < /dev/tty
+
+  stty "$old"
+
+  # echo "cols:$cols"
+  # echo "rows:$rows"
+  stty cols "$cols" rows "$rows"
+}
+
+[ "`tty`" = "/dev/ttyS0" ] && res
+
+{% if root == 'OK' %}
+alias saltrun='salt-call state.highstate --log-level=warning'
+{% else %}
+alias saltrun='sudo salt-call state.highstate --log-level=warning'
+[ -z "$PS1" ] && return
+if [ "$PS1" != "" -a "${STARTED_SCREEN:-x}" = x -a "${SSH_TTY:-x}" != x ]
+then
+  STARTED_SCREEN=1 ; export STARTED_SCREEN
+  screen -dRR
+fi
+{% endif %}

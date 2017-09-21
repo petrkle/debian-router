@@ -1,0 +1,9 @@
+deb http://mirror.dkm.cz/debian/ stretch main non-free contrib
+deb-src http://mirror.dkm.cz/debian/ stretch main non-free contrib
+
+deb http://security.debian.org/debian-security stretch/updates main non-free contrib
+deb-src http://security.debian.org/debian-security stretch/updates main non-free contrib
+
+# stretch-updates, previously known as 'volatile'
+deb http://mirror.dkm.cz/debian/ stretch-updates main non-free contrib
+deb-src http://mirror.dkm.cz/debian/ stretch-updates main non-free contrib

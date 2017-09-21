@@ -1,0 +1,14 @@
+/var/log/php-fpm.log {
+	rotate 36
+	monthly
+  dateext
+  dateformat -%Y-%m
+	dateyesterday
+	missingok
+	notifempty
+	compress
+	delaycompress
+	postrotate
+		invoke-rc.d php7.1-fpm reopen-logs > /dev/null
+	endscript
+}

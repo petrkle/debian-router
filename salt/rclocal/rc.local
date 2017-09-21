@@ -1,0 +1,13 @@
+#!/bin/sh -e
+#
+# rc.local
+
+wget -qO /dev/null https://freedns.afraid.org/dynamic/update.php
+
+for foo in 1 2 3
+do
+	/usr/bin/beep -l 400 -f 1440
+	sleep 1
+done
+
+exit 0

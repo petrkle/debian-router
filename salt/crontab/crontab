@@ -1,0 +1,16 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=petr@example.cz
+
+# m h dom mon dow user	command
+17 *	* * *	root    cd / && run-parts --report /etc/cron.hourly
+25 6	* * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6	* * 7	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+#
+
+# verejna IP
+25 */2 * * * petr wget -qO /dev/null https://freedns.afraid.org/dynamic/update.php
+
+# certifikat
+15 20 1-7,15-21 * * root [ `LC_ALL=C date +\%a` = Tue ] && /usr/local/bin/le-cron.sh

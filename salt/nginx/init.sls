@@ -57,6 +57,15 @@ nginx:
   - watch_in:
       - service: nginx
 
+/etc/nginx/radio.conf:
+ file.managed:
+  - source: salt://nginx/radio.conf
+  - mode: 644
+  - user: root
+  - group: root
+  - watch_in:
+      - service: nginx
+
 /etc/nginx/fastcgi_params:
  file.managed:
   - source: salt://nginx/fastcgi_params

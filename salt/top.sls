@@ -39,3 +39,4 @@ base:
     - phpmyadmin
     - speedtest
     - icecast
+    - minidlna

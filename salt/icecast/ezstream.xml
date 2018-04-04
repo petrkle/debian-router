@@ -1,0 +1,12 @@
+<ezstream>
+    <url>http://{{ pillar.hostname }}.example.cz:8000/radio.mp3</url>
+    <sourcepassword>{{ pillar.icecast.sourcepasswd }}</sourcepassword>
+    <format>MP3</format>
+		<filename>/usr/local/bin/next-song.sh</filename>
+    <playlist_program>1</playlist_program>
+    <svrinfoname></svrinfoname>
+		<svrinfourl>https://{{ pillar.hostname }}.example.cz/radio</svrinfourl>
+    <svrinfogenre>Various artist</svrinfogenre>
+    <svrinfodescription>Radio</svrinfodescription>
+    <svrinfopublic>1</svrinfopublic>
+</ezstream>

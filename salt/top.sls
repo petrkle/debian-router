@@ -38,3 +38,4 @@ base:
     - zabbix
     - phpmyadmin
     - speedtest
+    - icecast

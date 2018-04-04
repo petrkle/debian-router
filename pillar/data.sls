@@ -71,6 +71,8 @@ http_auth_users:
    pass: CgxUfGEe5qN46vP9MpRnK7wbQ
   zabbix: 
    pass: T6hKRsDrBqjHEgxm29un4ab7C
+  radio:
+   pass: GxcgjDQ5ktCS4TAKasFvmV8EW
 
 nginx_confs:
  - debian-router.example.cz
